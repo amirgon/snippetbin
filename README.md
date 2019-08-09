@@ -67,3 +67,54 @@ Output:
   - A new file without "original revision key" will be named by a unique ID and commited.
   - An existing file with commit ID will be branched from the original revision ID.
 
+
+NOTE: each commit must have a parent, otherwise `git diff-tree` will not work correctly. So don't start with empty repo!
+
+## git commands for LOAD-FILE
+
+Get file text according to revision key. Revision key is actually the commit ID, and each commit has only one file
+
+Inputs:
+- `revision_key`
+
+Outputs:
+- `file_text`
+- `revision_history`
+
+```bash
+file_hash=$(git diff-tree --no-commit-id "$revision_key" | cut -d ' ' -f 4)
+file_text=$(git show --raw "$file_hash")
+```
+
+Get revision history from revision key:
+
+```bash
+file_name=$(git diff-tree --no-commit-id --name-only "$revision_key")
+revision_history=$(git log --format=%H "$revision_key" -- "$file_name")
+```
+
+## git commands for SAVE-FILE
+
+Inputs:
+- `file_text`
+- optional `original_revision_key`
+- `commit_msg` 
+
+Outputs:
+- `revision_key`
+
+```bash
+if [ -z "$original_revision_key" ]
+then
+    file_name=$(uuidgen)
+    git checkout master
+else
+    file_name=$(git diff-tree --no-commit-id --name-only -r "$original_revision_key")
+    git checkout -B branch_$(uuidgen) "$original_revision_key"
+fi
+echo "$file_text" > "$file_name"
+git add "$file_name"
+git commit -am "$commit_msg"
+revision_key=$(git rev-parse HEAD)
+```
+
