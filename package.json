@@ -1,0 +1,24 @@
+{
+  "name": "snippetbin",
+  "version": "1.0.0",
+  "description": "A simple pastebin/gist like service (server side), with git as its backend",
+  "main": "service.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amirgon/snippetbin.git"
+  },
+  "author": "Amir Gonnen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amirgon/snippetbin/issues"
+  },
+  "homepage": "https://github.com/amirgon/snippetbin#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
