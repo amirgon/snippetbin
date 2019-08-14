@@ -1,5 +1,5 @@
 
-const { spawn } = require('child_process');
+const spawn = require('child_process').spawnSync;
 const process = require('process');
 const geoip = require('geoip-lite');
 
@@ -17,10 +17,8 @@ var appRouter = function (app) {
 
   app.get("/test", function(req, res) {
     const pwd = spawn('pwd', [], spawn_options);
-    pwd.stdout.on('data', (data)=> {
-      res.status(200).send(`Welcome to our restful API\n pwd = ${data} cwd = ${cwd}\n` +
-          `${JSON.stringify(req.headers)}`);
-    });
+    res.status(200).send(`Welcome to our restful API\n pwd = ${pwd.stdout} cwd = ${cwd}\n` +
+        `${JSON.stringify(req.headers)}`);
   });
 
   app.get("/load_file/:revision", function(req, res) {
@@ -35,30 +33,28 @@ var appRouter = function (app) {
     // Call git command
 
     const load_file = spawn(cwd + "/scripts/load_file.sh", ["-r", req.params.revision], spawn_options);
-    let load_file_result = {};
 
     // Register spawn events
 
-    load_file.on('error', (err) => res.status(400).send({"code": 0, "message": err.toString()}));
-    load_file.stdout.on('data', (data) => load_file_result.stdout = data.toString());
-    load_file.stderr.on('data', (data) => load_file_result.stderr = data.toString());
-    load_file.on('exit', (code, signal) => {
-      if (code == 0){
+    if (load_file.error){
+      res.status(400).send({"code": 0, "message": load_file.error});
+    }
 
-        // First line contains the history, the rest contain the text
-        
-        const pos = load_file_result.stdout.indexOf("\n");
-        const first_line = load_file_result.stdout.substring(0,pos);
-        const text = load_file_result.stdout.substring(pos+1);
-        const history = first_line.split(" ");
-        res.status(200).send({"history": history, "text": text});
-      } else {
+    if (load_file.status == 0){
+      // First line contains the history, the rest contain the text
+      
+      const stdout = load_file.stdout.toString();
+      const pos = stdout.indexOf("\n");
+      const first_line = stdout.substring(0,pos);
+      const text = stdout.substring(pos+1);
+      const history = first_line.split(" ");
+      res.status(200).send({"history": history, "text": text});
+    } else {
 
-        // Handle non zero return value from spawn
-        
-        res.status(400).send({"code": code, "message": load_file_result.stderr});
-      }
-    });
+      // Handle non zero return value from spawn
+      
+      res.status(400).send({"code": load_file.status, "message": load_file.stderr.toString()});
+    }
   });
 
   app.post("/save_file/", function(req, res) {
@@ -87,21 +83,20 @@ var appRouter = function (app) {
     
     const original_revision_arg = req.body.original_revision? ["-r", req.body.original_revision]: [];
     const save_file = spawn(cwd + "/scripts/save_file.sh", ["-c", commit_msg].concat(original_revision_arg), spawn_options);
-    let save_file_result = {};
 
-    save_file.on('error', (err) => res.status(400).send({"code": 0, "message": err.toString()}));
-    save_file.stdout.on('data', (data) => save_file_result.stdout = data.toString());
-    save_file.stderr.on('data', (data) => save_file_result.stderr = data.toString());
-    save_file.on('exit', (code, signal) => {
-      if (code == 0){
-        res.status(200).send({"revision" : save_file_result.stdout});
-      } else {
+    if (save_file.error){
+      res.status(400).send({"code": 0, "message": save_file.error.toString()});
+    }
 
-        // Handle non zero return value from spawn
-        
-        res.status(400).send({"code": code, "message": load_file_result.stderr});
-      }
-    });
+    if (save_file.status == 0){
+      res.status(200).send({"revision" : save_file.stdout.toString()});
+    } else {
+
+      // Handle non zero return value from spawn
+      
+      res.status(400).send({"code": save_file.status, "message": save_file.stderr.toString()});
+    }
+
   });
 }
 

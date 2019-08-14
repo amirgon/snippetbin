@@ -34,5 +34,4 @@ revision_history=($(git rev-list "${revision_key}" -- "${file_name}"))
 # Output result
 
 echo "${revision_history[@]}"
-echo "${revision_history[@]}" >> /tmp/hist.txt
 echo "${file_text}"
