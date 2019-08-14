@@ -1,7 +1,6 @@
 // 
 // https://www.codementor.io/wapjude/creating-a-simple-rest-api-with-expressjs-in-5min-bbtmk51mq
 //
-//
 
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -14,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
 
 routes(app);
+app.use(express.static('public'))
 
 var server = app.listen(3000, function () {
     console.log("app running on port.", server.address().port);

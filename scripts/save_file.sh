@@ -49,7 +49,7 @@ file_text=$(cat)
     fi
     echo "${file_text}" > "${file_name}"
     git add "${file_name}"
-    git commit -am "${commit_msg}"
+    git commit -m "${commit_msg}"
     revision_key=$(git rev-parse HEAD)
 
 } {lock_fd}<lock

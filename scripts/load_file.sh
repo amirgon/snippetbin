@@ -27,11 +27,12 @@ fi
 # git commands
 
 file_hash=$(git diff-tree --no-commit-id "${revision_key}" | cut -d ' ' -f 4)
-file_text=$(git show --raw "${file_hash}")
+file_text=$(git cat-file -p "${file_hash}")
 file_name=$(git diff-tree --no-commit-id --name-only "${revision_key}")
-revision_history=($(git log --format=%H "${revision_key}" -- "${file_name}"))
+revision_history=($(git rev-list "${revision_key}" -- "${file_name}"))
 
 # Output result
 
 echo "${revision_history[@]}"
+echo "${revision_history[@]}" >> /tmp/hist.txt
 echo "${file_text}"
