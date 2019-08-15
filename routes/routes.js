@@ -6,7 +6,7 @@ const geoip = require('geoip-lite');
 var appRouter = function (app) {
 
   const revision_pattern = new RegExp("^[0-9a-fA-F]+$");
-  const cwd = process.cwd();
+  const cwd = process.env.PWD; // process.cwd();
 
   const spawn_options = {
     cwd: cwd + "/data",
