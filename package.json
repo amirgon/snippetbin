@@ -4,7 +4,8 @@
   "description": "A simple pastebin/gist like service (server side), with git as its backend",
   "main": "service.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node service.js"
   },
   "repository": {
     "type": "git",
