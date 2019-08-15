@@ -9,8 +9,8 @@ var appRouter = function (app) {
   const cwd = process.cwd();
 
   const spawn_options = {
-    //cwd: cwd + "/data",
-    cwd: "/tmp/test",
+    cwd: cwd + "/data",
+    //cwd: "/tmp/test",
     maxBuffer: 1024*1024,
     windowsHide: true
   };
