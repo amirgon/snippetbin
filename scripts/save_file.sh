@@ -42,14 +42,14 @@ file_text=$(cat)
     if [ -z "${original_revision_key}" ]
     then
         file_name=$(uuidgen)
-        git checkout master
+        git checkout master > /dev/null
     else
         file_name=$(git diff-tree --no-commit-id --name-only -r "${original_revision_key}")
-        git checkout -B branch_$(uuidgen) "${original_revision_key}"
+        git checkout -B branch_$(uuidgen) "${original_revision_key}" > /dev/null
     fi
     echo "${file_text}" > "${file_name}"
-    git add "${file_name}"
-    git commit -m "${commit_msg}"
+    git add "${file_name}" > /dev/null
+    git commit -m "${commit_msg}" > /dev/null
     revision_key=$(git rev-parse HEAD)
 
 } {lock_fd}<lock

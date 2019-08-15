@@ -14,52 +14,32 @@
 </head>
 
 <body>
-  <h1>SnippetBin Demo</h1>
+  <div class="top">
+    <div class="headers">
+      <h1>SnippetBin Demo</h1>
 
-  <div>
-    <input id="history" type="range" name="history"
-           min="0" max="3" onchange="load_revision(revision_history[this.value], false)"/>
-    <label for="history">Revision History</label>
+      <div>
+        <label for="history">Revision History</label>
+      </div>
+      <div>
+        <input class="slider" id="history" type="range" name="history" list="ticks" step="1"
+               min="0" max="0" value="0" onchange="load_revision(revision_history[this.value], false)"/>
+      </div>
+
+      <div class="controls">
+        <button id="save" class="dirty_watcher" type="button" onclick="save()"/>Save</button>
+        <button id="copy" class="dirty_watcher copying_watcher" type="button" onclick="copy()"/>Copy Link</button>
+        <input id="link" class="dirty_watcher copying_watcher" type="text" readonly onblur="copy_complete()"></input>
+      </div>
+    </div>
+
+    <div id="editor"> </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/mode-python.js" integrity="sha256-MinL4s5SkQg5C0UzG79kKoTJMsTWOjdMX4v+i7bCPVI=" crossorigin="anonymous"></script>
+    <script src="js/script.js"></script>
+
   </div>
-
-  <div>
-
-    <button type="button"/>Save and Share</label>
-  </div>
-
-  <div id="editor"> </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/mode-python.js" integrity="sha256-MinL4s5SkQg5C0UzG79kKoTJMsTWOjdMX4v+i7bCPVI=" crossorigin="anonymous"></script>
-
-  <script>
-      var editor = ace.edit("editor");
-      editor.setTheme("ace/theme/monokai");
-      editor.session.setMode("ace/mode/python");
-
-      revision_history = []
-
-      function load_revision(revision, update_history){
-        axios.get('/load_file/'+revision).then(res=>{
-          editor.session.setValue(res.data.text); 
-          if (update_history){
-            let history = document.getElementById("history");
-            revision_history = res.data.history;
-            history.max = revision_history.length-1;
-            history.value = 0;
-          }
-        }).catch(err=>{
-          console.log('ERROR: ' + err.message);
-        });
-      }
-
-      var url_string = window.location.href;
-      var url = new URL(url_string);
-      var revision = url.searchParams.get("revision");
-      if (revision) load_revision(revision, true);
-
-  </script>
-
 </body>
 
 </html>

@@ -1,9 +1,88 @@
 
+.top {
+  height:100%;
+}
+
+.headers {
+  height: 150px;
+  width: 510px;
+  margin: 25px;
+}
+
+.controls {
+  display:flex;
+}
+
+#history { 
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 500px;
+}
+
+#save {
+  pointer-events:none;
+  color:lightgray;
+}
+
+#save.dirty {
+  pointer-events:initial;
+  color:initial;
+}
+
+#copy.dirty,#link.dirty {
+  pointer-events:none;
+  color:lightgray;
+}
+
+#copy.copying {
+  display:none;
+}
+
+#link {
+  display:none;
+  flex:1;
+}
+
+#link.copying {
+  display:initial;
+}
+
 #editor { 
-        position: absolute;
-        margin-top:200px;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
+  position: absolute;
+  height:calc(100% - 200px);
+  width:550px;
+}
+
+/* Slider formatting 
+ * https://www.w3schools.com/howto/howto_js_rangeslider.asp
+ */
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;   
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: red;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: red;
+  cursor: pointer;
+}

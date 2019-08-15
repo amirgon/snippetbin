@@ -77,12 +77,13 @@ var appRouter = function (app) {
       `Language: ${req.headers["accept-language"]}\n`+
       `Country: ${(geo ? geo.country: "Unknown")}\n` + 
       `Region: ${(geo ? geo.region: "Unknown")}\n` +
-      `City: ${(geo ? geo.region: "Unknown")}\n`;
+      `City: ${(geo ? geo.city: "Unknown")}\n`;
 
     // Call git command
     
     const original_revision_arg = req.body.original_revision? ["-r", req.body.original_revision]: [];
-    const save_file = spawn(cwd + "/scripts/save_file.sh", ["-c", commit_msg].concat(original_revision_arg), spawn_options);
+    const save_file = spawn(cwd + "/scripts/save_file.sh", ["-c", commit_msg].concat(original_revision_arg), 
+        Object.assign({"input":req.body.text}, spawn_options));
 
     if (save_file.error){
       res.status(400).send({"code": 0, "message": save_file.error.toString()});
