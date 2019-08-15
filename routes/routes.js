@@ -43,7 +43,7 @@ var appRouter = function (app) {
     if (load_file.status == 0){
       // First line contains the history, the rest contain the text
       
-      const stdout = load_file.stdout.toString();
+      const stdout = load_file.stdout.toString().trim();
       const pos = stdout.indexOf("\n");
       const first_line = stdout.substring(0,pos);
       const text = stdout.substring(pos+1);
@@ -90,7 +90,7 @@ var appRouter = function (app) {
     }
 
     if (save_file.status == 0){
-      res.status(200).send({"revision" : save_file.stdout.toString()});
+      res.status(200).send({"revision" : save_file.stdout.toString().trim()});
     } else {
 
       // Handle non zero return value from spawn

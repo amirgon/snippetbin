@@ -50,12 +50,10 @@ file_text=$(cat)
     echo "${file_text}" > "${file_name}"
     git add "${file_name}" > /dev/null
     git commit -m "${commit_msg}" > /dev/null
-    revision_key=$(git rev-parse HEAD)
+    revision_key="$(git rev-parse HEAD)"
 
 } {lock_fd}<lock
 
 # Output result
 
 echo "${revision_key}"
-exit 0
-

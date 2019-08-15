@@ -9,8 +9,19 @@ function clear_dirty(){
     forEach(e => e.classList.remove('dirty'));
 }
 
+var cache = {};
+function cached_get(url){  
+  if (url in cache) return Promise.resolve(cache[url]);
+  else {
+    return axios.get(url).then(res=>{
+      cache[url] = res;
+      return res;
+    });
+  }
+}
+
 function load_revision(revision, update_history){
-  axios.get('/load_file/'+revision).then(res=>{
+  cached_get('/load_file/'+revision).then(res=>{
     current_revision = revision;
     editor_cmd++;
     editor.setValue(res.data.text); 
