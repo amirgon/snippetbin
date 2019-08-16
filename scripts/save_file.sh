@@ -39,6 +39,15 @@ file_text=$(cat)
 {
     flock ${lock_fd}
 
+    if [ ! -e .git ]
+    then
+        git init > /dev/null
+        git config --local user.email "nospam@nospam.com" > /dev/null
+        git config --local user.name "service" > /dev/null
+        git add . > /dev/null
+        git commit -m "first commit" > /dev/null
+    fi
+
     if [ -z "${original_revision_key}" ]
     then
         file_name=$(uuidgen)
