@@ -21,14 +21,24 @@ function cached_get(url){
 }
 
 function load_revision(revision, update_history){
+  if (!revision) return;
   cached_get('/load_file/'+revision).then(res=>{
     current_revision = revision;
     editor_cmd++;
     editor.setValue(res.data.text); 
     if (update_history){
       let history = document.getElementById("history");
-      revision_history = res.data.history;
-      history.max = revision_history.length-1;
+      let revision_history_data = document.getElementById("history_data");
+      while(revision_history_data.firstChild) {
+        revision_history_data.removeChild(revision_history_data.firstChild);
+      }
+      res.data.history.forEach((item, i) => {
+        let option = document.createElement('option');
+        option.value = i;
+        option.dataset.value = item;
+        revision_history_data.appendChild(option);
+      });
+      history.max = res.data.history.length-1;
       history.value = 0;
     }
     let link = document.getElementById("link");
@@ -73,7 +83,6 @@ editor.on("input", function(e) {
   else set_dirty();
 });
 
-var revision_history = []
 var url_string = window.location.href;
 var url = new URL(url_string);
 var current_revision = url.searchParams.get("revision");

@@ -22,8 +22,11 @@
         <label for="history">Revision History</label>
       </div>
       <div>
-        <input class="slider" id="history" type="range" name="history" list="ticks" step="1"
-               min="0" max="0" value="0" onchange="load_revision(revision_history[this.value], false)"/>
+        <input class="slider" id="history" type="range" list="history_data" name="history" step="1"
+               min="0" max="0" value="0" onchange="load_revision(this.list.children[this.value].dataset['value'], false)"/>
+        <datalist class="sliderticks" id="history_data">
+          <option value="0"/>
+        </datalist>
       </div>
 
       <div class="controls">

@@ -72,6 +72,7 @@ var appRouter = function (app) {
 
     const commit_msg = 
       `IP: ${JSON.stringify(req.ip)}\n`+
+      `Origin: ${req.headers["origin"]}\n` +
       `Referer: ${req.headers["referer"]}\n` +
       `Browser: ${req.headers["user-agent"]}\n` +
       `Language: ${req.headers["accept-language"]}\n`+
