@@ -4,8 +4,8 @@
 # Expects SNIPPETBIN_DEPLOY_KEY and optionally SNIPPETBIN_DATA_DIR, SNIPPETBIN_REMOTE_DATA to be defined at this point
 # Use: heroku config:set SNIPPETBIN_DEPLOY_KEY="$(cat ~/.ssh/snippetbin_service)"
 
-set data_dir=${SNIPPETBIN_DATA_DIR:-~/online_data}
-set remote_data=${SNIPPETBIN_REMOTE_DATA:-git@github.com:amirgon/snippetbin_data.git}
+export data_dir=${SNIPPETBIN_DATA_DIR:-~/online_data}
+export remote_data=${SNIPPETBIN_REMOTE_DATA:-git@github.com:amirgon/snippetbin_data.git}
 
 mkdir -p $data_dir
 [ -e "$data_dir/.git" ] && exit 0
