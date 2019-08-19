@@ -5,6 +5,26 @@ const process = require('process');
 const geoip = require('geoip-lite');
 const Bottleneck = require("bottleneck/es5");
 
+function getClientIp(req) { // https://stackoverflow.com/a/14382990/619493
+  var ipAddress;
+  // Amazon EC2 / Heroku workaround to get real client IP
+  var forwardedIpsStr = req.header('x-forwarded-for'); 
+  if (forwardedIpsStr) {
+    // 'x-forwarded-for' header may return multiple IP addresses in
+    // the format: "client IP, proxy 1 IP, proxy 2 IP" so take the
+    // the first one
+    var forwardedIps = forwardedIpsStr.split(',');
+    ipAddress = forwardedIps[0];
+  }
+  if (!ipAddress) {
+    // Ensure getting client IP address still works in
+    // development environment
+    ipAddress = req.connection.remoteAddress;
+  }
+  return ipAddress;
+};
+
+
 var appRouter = function (app) {
 
   const revision_pattern = new RegExp("^[0-9a-fA-F]+$");
@@ -74,11 +94,12 @@ var appRouter = function (app) {
     }
 
     // Create commit message from HTTP headers
-    
-    const geo = geoip.lookup(req.ip);
+
+    const ip = getClientIp(req);
+    const geo = geoip.lookup(ip);
 
     const commit_msg = 
-      `IP: ${JSON.stringify(req.ip)}\n`+
+      `IP: ${ip}\n`+
       `Origin: ${req.headers["origin"]}\n` +
       `Referer: ${req.headers["referer"]}\n` +
       `Browser: ${req.headers["user-agent"]}\n` +

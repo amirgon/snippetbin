@@ -5,7 +5,7 @@
   "main": "service.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./scripts/setup.sh && node service.js"
+    "start": "node ./node_modules/geoip-lite/scripts/updatedb.js && ./scripts/setup.sh && node service.js"
   },
   "repository": {
     "type": "git",
