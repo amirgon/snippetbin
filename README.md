@@ -5,14 +5,21 @@
 
 # Rational
 
-A simple pastebin/gist like service (server side).
-It will allow
+A simple pastebin/gist-like service (server side).
+The underlying database is git. 
+Syncs automatically with GitHub or any other git server.
+
+It allows
 - Creating new (unamed) files and saving them on the server
 - A file revision is immutable. Once written to the server it cannot be changed.
 - A file revision can have history. It is an edit of another revision.
 - Sharing the files by publishing a "revision id" that identifies that revision of that file
 - Editing an existing file revision according to its revision id (this will create a new file with the original text and original history)
 - Browsing the change history of a file, and branching it to a new file
+
+# Demo
+
+https://snippet-bin.herokuapp.com
 
 # API
 
@@ -117,4 +124,9 @@ git add "$file_name"
 git commit -am "$commit_msg"
 revision_key=$(git rev-parse HEAD)
 ```
+
+# TODO
+
+- Change SAVE-FILE implementation to use git plumbing commands
+- Prevent checking out, no need to update all files locally when only one is used simultaneously
 
