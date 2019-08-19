@@ -1,16 +1,23 @@
 
 const spawn = require('child_process').spawnSync;
+const spawnAsync = require('child_process').spawn;
 const process = require('process');
 const geoip = require('geoip-lite');
+const Bottleneck = require("bottleneck/es5");
 
 var appRouter = function (app) {
 
   const revision_pattern = new RegExp("^[0-9a-fA-F]+$");
   const cwd = process.env.PWD; // process.cwd();
 
+  const sync_limiter = new Bottleneck({
+    maxConcurrent: 1,
+    highWater: 1,
+    minTime: 1000*60*5 // 5 minutes
+  });
+
   const spawn_options = {
-    cwd: cwd + "/data",
-    //cwd: "/tmp/test1",
+    cwd: process.env.SNIPPETBIN_DATA_DIR || (cwd + "/data"),
     maxBuffer: 1024*1024,
     windowsHide: true
   };
@@ -92,13 +99,28 @@ var appRouter = function (app) {
 
     if (save_file.status == 0){
       res.status(200).send({"revision" : save_file.stdout.toString().trim()});
+
+      // Schedule database sync
+
+      sync_limiter.schedule(() => {
+        console.log("Syncing...");
+        sync = spawnAsync(cwd + "/scripts/sync.sh", [], spawn_options);
+        sync.stderr.pipe(process.stdout);
+        sync.stdout.pipe(process.stdout);
+        return new Promise(resolve => sync.on("exit", code => {
+          console.log("Sync completed with code " + code);
+          resolve();
+        }));
+      }).catch((err)=>{
+          console.log("Sync was cancelled: "+err);
+      });
+
     } else {
 
       // Handle non zero return value from spawn
       
       res.status(400).send({"code": save_file.status, "message": save_file.stderr.toString()});
     }
-
   });
 }
 

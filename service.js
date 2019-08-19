@@ -2,6 +2,7 @@
 // https://www.codementor.io/wapjude/creating-a-simple-rest-api-with-expressjs-in-5min-bbtmk51mq
 //
 
+require('log-timestamp');
 var express = require("express");
 var bodyParser = require("body-parser");
 var cors = require('cors')

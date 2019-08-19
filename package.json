@@ -4,6 +4,7 @@
   "description": "A simple pastebin/gist like service (server side), with git as its backend",
   "main": "service.js",
   "scripts": {
+    "build": "./scripts/setup.sh",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node service.js"
   },
@@ -19,8 +20,10 @@
   "homepage": "https://github.com/amirgon/snippetbin#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "bottleneck": "^2.19.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "geoip-lite": "^1.3.7"
+    "geoip-lite": "^1.3.7",
+    "log-timestamp": "^0.3.0"
   }
 }
