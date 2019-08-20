@@ -20,12 +20,22 @@ function cached_get(url){
   }
 }
 
-function load_revision(revision, update_history){
+function update_link(revision){
+    let link = document.getElementById("link");
+    let base_url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+    link.value = base_url + "/?revision=" + revision;
+}
+
+function load_revision(revision, update_editor, update_history){
   if (!revision) return;
   cached_get('/load_file/'+revision).then(res=>{
     current_revision = revision;
-    editor_cmd++;
-    editor.setValue(res.data.text); 
+
+    if (update_editor){
+      editor_cmd++;
+      editor.setValue(res.data.text);
+    }
+
     if (update_history){
       let history = document.getElementById("history");
       let revision_history_data = document.getElementById("history_data");
@@ -41,10 +51,8 @@ function load_revision(revision, update_history){
       history.max = res.data.history.length-1;
       history.value = 0;
     }
-    let link = document.getElementById("link");
-    let base_url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
-    link.value = base_url + "/?revision=" + revision;
-    clear_dirty();
+
+    update_link(revision);
   }).catch(err=>{
     console.log('ERROR: ' + err.message);
   });
@@ -55,7 +63,8 @@ function save(){
     "text": editor.getValue(),
     "original_revision": current_revision
   }).then(res=>{
-    load_revision(res.data.revision, true);
+    clear_dirty();
+    load_revision(res.data.revision, false, true);
   }).catch(err=>{
     console.log('ERROR: ' + err.message);
   });
@@ -86,6 +95,6 @@ editor.on("input", function(e) {
 var url_string = window.location.href;
 var url = new URL(url_string);
 var current_revision = url.searchParams.get("revision");
-if (current_revision) load_revision(current_revision, true);
+if (current_revision) load_revision(current_revision, true, true);
 
 var editor_cmd=0;

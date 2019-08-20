@@ -23,7 +23,7 @@
       </div>
       <div>
         <input class="slider" id="history" type="range" list="history_data" name="history" step="1"
-               min="0" max="0" value="0" onchange="load_revision(this.list.children[this.value].dataset['value'], false)"/>
+               min="0" max="0" value="0" onchange="load_revision(this.list.children[this.value].dataset['value'], true, false)"/>
         <datalist class="sliderticks" id="history_data">
           <option value="0"/>
         </datalist>
@@ -31,8 +31,8 @@
 
       <div class="controls">
         <button id="save" class="dirty_watcher" type="button" onclick="save()"/>Save</button>
-        <button id="copy" class="dirty_watcher copying_watcher" type="button" onclick="copy()"/>Copy Link</button>
-        <input id="link" class="dirty_watcher copying_watcher" type="text" readonly onblur="copy_complete()"></input>
+        <button id="copy" class="dirty_watcher copying_watcher" type="button" onclick="copy()"/>Share</button>
+        <input id="link" class="copying_watcher" type="text" readonly onblur="copy_complete()"></input>
       </div>
     </div>
 
