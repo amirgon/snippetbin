@@ -89,15 +89,10 @@ Outputs:
 - `revision_history`
 
 ```bash
-file_hash=$(git diff-tree --no-commit-id "$revision_key" | cut -d ' ' -f 4)
-file_text=$(git show --raw "$file_hash")
-```
-
-Get revision history from revision key:
-
-```bash
-file_name=$(git diff-tree --no-commit-id --name-only "$revision_key")
-revision_history=$(git log --format=%H "$revision_key" -- "$file_name")
+file_hash=$(git diff-tree --no-commit-id "${revision_key}" | cut -d ' ' -f 4)
+file_text=$(git cat-file -p "${file_hash}")
+file_name=$(git diff-tree --no-commit-id --name-only "${revision_key}")
+revision_history=($(git rev-list "${revision_key}" -- "${file_name}"))
 ```
 
 ## git commands for SAVE-FILE
