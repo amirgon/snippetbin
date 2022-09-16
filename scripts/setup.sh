@@ -14,6 +14,7 @@ mkdir -p $data_dir
 mkdir -p ~/.ssh
 
 echo "$SNIPPETBIN_DEPLOY_KEY" > ~/.ssh/snippetbin_service
+chmod 600 ~/.ssh/snippetbin_service
 
 cat << EOF > ~/.ssh/config
 

@@ -37,7 +37,7 @@ var appRouter = function (app) {
   });
 
   const spawn_options = {
-    cwd: process.env.SNIPPETBIN_DATA_DIR || (cwd + "/data"),
+    cwd: process.env.SNIPPETBIN_DATA_DIR || "/app/data",
     maxBuffer: 1024*1024,
     windowsHide: true
   };
@@ -66,8 +66,7 @@ var appRouter = function (app) {
     if (load_file.error){
       res.status(400).send({"code": 0, "message": load_file.error});
     }
-
-    if (load_file.status == 0){
+    else if (load_file.status == 0){
       // First line contains the history, the rest contain the text
       
       const stdout = load_file.stdout.toString().trim();
@@ -117,8 +116,7 @@ var appRouter = function (app) {
     if (save_file.error){
       res.status(400).send({"code": 0, "message": save_file.error.toString()});
     }
-
-    if (save_file.status == 0){
+    else if (save_file.status == 0){
       res.status(200).send({"revision" : save_file.stdout.toString().trim()});
 
       // Schedule database sync
