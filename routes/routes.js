@@ -2,7 +2,6 @@
 const spawn = require('child_process').spawnSync;
 const spawnAsync = require('child_process').spawn;
 const process = require('process');
-const geoip = require('geoip-lite');
 const Bottleneck = require("bottleneck/es5");
 
 function getClientIp(req) { // https://stackoverflow.com/a/14382990/619493
@@ -95,7 +94,6 @@ var appRouter = function (app) {
     // Create commit message from HTTP headers
 
     const ip = getClientIp(req);
-    const geo = geoip.lookup(ip);
 
     const commit_msg = 
       `IP: ${ip}\n`+
@@ -103,9 +101,9 @@ var appRouter = function (app) {
       `Referer: ${req.headers["referer"]}\n` +
       `Browser: ${req.headers["user-agent"]}\n` +
       `Language: ${req.headers["accept-language"]}\n`+
-      `Country: ${(geo ? geo.country: "Unknown")}\n` + 
-      `Region: ${(geo ? geo.region: "Unknown")}\n` +
-      `City: ${(geo ? geo.city: "Unknown")}\n`;
+      `Country: Unknown\n` + 
+      `Region: Unknown\n` +
+      `City: Unknown\n`;
 
     // Call git command
     

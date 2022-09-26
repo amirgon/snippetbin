@@ -4,6 +4,9 @@
 # Expects SNIPPETBIN_DEPLOY_KEY and optionally SNIPPETBIN_DATA_DIR, SNIPPETBIN_REMOTE_HOST, SNIPPETBIN_REMOTE_REPO to be defined at this point
 # Use: heroku config:set SNIPPETBIN_DEPLOY_KEY="$(cat ~/.ssh/snippetbin_service)"
 
+# ensure we exit on any error
+set -e
+
 export data_dir=${SNIPPETBIN_DATA_DIR:-/app/data}
 export remote_host=${SNIPPETBIN_REMOTE_HOST:-github.com}
 export remote_repo=${SNIPPETBIN_REMOTE_REPO:-amirgon/snippetbin_data.git}
