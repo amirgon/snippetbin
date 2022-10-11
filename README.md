@@ -17,6 +17,33 @@ It allows
 - Editing an existing file revision according to its revision id (this will create a new file with the original text and original history)
 - Browsing the change history of a file, and branching it to a new file
 
+# Configuration and deployment
+
+To deploy in a Docker container, first build the docker image:
+```
+sudo docker build -t snippetbin ./
+```
+
+Then run it with environemnt variables like this:
+
+```
+sudo docker run -d --restart unless-stopped --name snippetbin -p 443:443 \
+        -v /var/snippetbin/data:/snippetbin_data \
+        -e "SNIPPETBIN_PORT=443" \
+        -e "SNIPPETBIN_DEPLOY_KEY=$(cat /var/snippetbin/deploy_key)" \
+        -e "SNIPPETBIN_REMOTE_REPO=my_snippetbin_data.git" \
+        -e "SNIPPETBIN_DATA_DIR=/snippetbin_data" \
+        -e "SNIPPETBIN_SSL_KEY=$(cat /var/snippetbin/ssl.key)" \
+        -e "SNIPPETBIN_SSL_CERT=$(cat /var/snippetbin/ssl.cer)" \
+        snippetbin npm start
+```
+
+This example would start SnippetBin in Docker and start HTTPS server on port 443, 
+with the specified GitHub deploy key (ssh) and certificates (ssl).  
+The data directory would be mounted to `/var/snippetbin/data` on the host.  
+It will look for the deploy_key and ssl keys under `/var/snippetbin/` on the host.  
+It will use my_snippetbin_data.git repo on as backing database.
+
 # Demo
 
 https://snippet-bin.herokuapp.com
