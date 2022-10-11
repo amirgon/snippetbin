@@ -12,7 +12,6 @@ export remote_host=${SNIPPETBIN_REMOTE_HOST:-github.com}
 export remote_repo=${SNIPPETBIN_REMOTE_REPO:-amirgon/snippetbin_data.git}
 
 mkdir -p $data_dir
-[ -e "$data_dir/.git" ] && exit 0
 
 mkdir -p ~/.ssh
 
@@ -30,7 +29,11 @@ Host snippetbin_service
 EOF
 
 ssh-keyscan github.com >> ~/.ssh/known_hosts
-git clone ssh://git@snippetbin_service/$remote_repo $data_dir
-git config -f $data_dir/.git/config user.email "service@snippet-bin.herokuapp.com"
-git config -f $data_dir/.git/config user.name "service"
+
+if [[ ! -e "$data_dir/.git" ]]
+then
+       git clone ssh://git@snippetbin_service/$remote_repo $data_dir
+       git config -f $data_dir/.git/config user.email "service@snippet-bin.herokuapp.com"
+       git config -f $data_dir/.git/config user.name "service"
+fi
 
