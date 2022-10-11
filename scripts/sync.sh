@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
-git pull --all
-git push --all
+: >> lock
+{
+    flock ${lock_fd}
+
+    git switch master
+    git pull --all
+    git push --all
+
+} {lock_fd}<lock
 
